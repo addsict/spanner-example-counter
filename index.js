@@ -13,6 +13,8 @@ exports.counter = (req, res) => {
 
   let count;
   let nextCount;
+
+  console.time('transaction');
   database.runTransaction((err, transaction) => {
     if (err) {
       return handleError(res, err);
@@ -38,6 +40,7 @@ exports.counter = (req, res) => {
       return transaction.commit();
     })
     .then(() => {
+      console.timeEnd('transaction');
       console.log(`successfully increment counter: id=${counterId}, count=${nextCount}`);
       res.set('Content-Type', 'text/plain');
       res.write(`${nextCount}\n`);
