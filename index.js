@@ -62,3 +62,51 @@ function handleError(res, err) {
     .send(`Error: ${err}`)
     .end();
 }
+
+
+// for test datastore version
+const Datastore = require('@google-cloud/datastore');
+const datastore = Datastore();
+exports.counterDatastore = (req, res) => {
+  const counterId = req.query['id'];
+
+  const transaction = datastore.transaction();
+  let nextCount;
+
+  console.time('transaction');
+  transaction
+    .run()
+    .then(() => {
+      return transaction.get(datastore.key(['Counter', counterId]));
+    })
+    .then(results => {
+      let counter = results[0];
+      if (!counter) {
+        counter = {
+          count: 0,
+        };
+      }
+
+      console.log(`read counter: id=${counterId}, count=${counter.count}`);
+      nextCount = counter.count + 1;
+      counter.count = nextCount;
+      transaction.save([
+        {
+          key: datastore.key(['Counter', counterId]),
+          data: counter,
+        },
+      ]);
+
+      return transaction.commit();
+    })
+    .catch(err => {
+      return handleError(res, err);
+    })
+    .then(() => {
+      console.timeEnd('transaction');
+      console.log(`successfully increment counter: id=${counterId}, count=${nextCount}`);
+      res.set('Content-Type', 'text/plain');
+      res.write(`${nextCount}\n`);
+      res.status(200).end();
+    });
+};

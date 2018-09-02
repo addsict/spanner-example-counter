@@ -22,6 +22,7 @@ make deploy PROJECT_ID=${PROJECT_ID} INSTANCE_ID=${INSTANCE_ID} DATABASE_ID=${DA
 Set `FUNCTION_URL` and curl it.
 
 ```sh
+FUNCTION_URL=`gcloud functions describe counter --format 'value(httpsTrigger.url)'`
 curl ${FUNCTION_URL}/counter?id=1
 ```
 
@@ -36,17 +37,17 @@ make clean PROJECT_ID=${PROJECT_ID} INSTANCE_ID=${INSTANCE_ID}
 ### Conditions
 
 * Load test tool: ab
-* Concurrency: 100
 * Total requests: 1000
+* Concurrency: 100
 
 ### Results
 
 Let's compare single-region and multi-region results.
 
-| region config | transaction latency | total time | concurrency |
+| region config | total time | latency | concurrency |
 |---------------|---------------------|------------|-------------|
-| single-region (us-central1) | 300 ms | 54 sec | 18 txn / sec | 
-| multi-region (tam3) | 500 ms | 114 sec | 8.7 txn / sec | 
+| single-region (us-central1) | 54 sec | 300 ms/txn | 18 txn/sec |
+| multi-region (tam3) | 114 sec | 500 ms/txn | 8.7 txn/sec |
 
 
 <details>
