@@ -1,6 +1,6 @@
 # spanner-example-counter
 
-Example code for implementing a counter with Cloud Spanner.
+Example code for implementing a counter with Cloud Spanner and Cloud Functions.
 
 ## Setup
 
@@ -39,6 +39,7 @@ make clean PROJECT_ID=${PROJECT_ID} INSTANCE_ID=${INSTANCE_ID}
 * Load test tool: ab
 * Total requests: 1000
 * Concurrency: 100
+* Increment one counter (same counter id)
 
 ### Results
 

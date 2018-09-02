@@ -18,3 +18,4 @@ deploy-datastore:
 
 clean:
 	gcloud --project=${PROJECT_ID} spanner instances delete ${INSTANCE_ID}
+	gcloud --project=${PROJECT_ID} functions delete counter
