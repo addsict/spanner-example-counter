@@ -9,25 +9,18 @@ const spanner = new Spanner({
 });
 
 const instance = spanner.instance(instanceId);
-const database = instance.database(databaseId);
 
-const schema = 
-    `CREATE TABLE Counters (
-      id     INT64 NOT NULL,
-      count  INT64 NOT NULL
-    ) PRIMARY KEY (id)`;
-
-database
-  .createTable(schema)
+instance
+  .createDatabase(databaseId)
   .then(results => {
-    const table = results[0];
+    const database = results[0];
     const operation = results[1];
 
-    console.log(`Waiting for operation to complete...`);
+    console.log(`Waiting for operation on ${database.id} to complete...`);
     return operation.promise();
   })
   .then(() => {
-    console.log(`Created Counters table on database ${databaseId}.`);
+    console.log(`Created database ${databaseId} on instance ${instanceId}.`);
   })
   .catch(err => {
     console.error('ERROR:', err);

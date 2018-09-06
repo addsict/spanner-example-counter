@@ -2,9 +2,10 @@
 
 setup:
 	# create spanner instance
-	gcloud spanner instances create ${INSTANCE_ID} --config=us-central1 --nodes=1 --description="Test"
+	gcloud spanner instances create ${INSTANCE_ID} --config=regional-us-central1 --nodes=1 --description="Test"
 	
 	# create table
+	PROJECT_ID=${PROJECT_ID} INSTANCE_ID=${INSTANCE_ID} DATABASE_ID=${DATABASE_ID} node schema/create_database.js
 	PROJECT_ID=${PROJECT_ID} INSTANCE_ID=${INSTANCE_ID} DATABASE_ID=${DATABASE_ID} node schema/create_table.js
 	
 	# load initial data
